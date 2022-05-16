@@ -29,7 +29,7 @@ jobs:
     concurrency: staging_environment
     env:
       AZURE_SUBSCRIPTION: 799c12ba-353c-44a1-883d-84808ebb2216
-    if: ${{ github.repository == 'Azure/azure-spring-initializr' && github.event_name != 'pull_request' }}
+    if: ${{ github.repository == 'backwind1233/azure-spring-initializr' && github.event_name != 'pull_request' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_IMAGE_NAME: 'ghcr.io/azure/spring/spring-initializr'
-    if: ${{ github.repository == 'Azure/azure-spring-initializr' && github.event_name != 'pull_request' }}
+    if: ${{ github.repository == 'backwind1233/azure-spring-initializr' && github.event_name != 'pull_request' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
