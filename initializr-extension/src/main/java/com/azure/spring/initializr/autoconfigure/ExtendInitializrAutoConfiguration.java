@@ -16,6 +16,7 @@
 
 package com.azure.spring.initializr.autoconfigure;
 
+import com.azure.spring.initializr.extension.scm.push.common.GitServiceEnum;
 import com.azure.spring.initializr.extension.scm.push.github.restclient.GithubServiceFactory;
 import com.azure.spring.initializr.extension.scm.push.common.service.GitServiceFactory;
 import com.azure.spring.initializr.extension.scm.push.common.service.GitServiceFactoryDelegate;
@@ -152,13 +153,14 @@ public class ExtendInitializrAutoConfiguration {
     ExtendProjectGenerationController projectGenerationController(
         InitializrMetadataProvider metadataProvider,
         ObjectProvider<ProjectRequestPlatformVersionTransformer> platformVersionTransformer,
-        ApplicationContext applicationContext) {
+        ApplicationContext applicationContext,
+        GitServiceFactoryDelegate gitServiceFactoryDelegate) {
         ExtendProjectRequestToDescriptionConverter converter =
             new ExtendProjectRequestToDescriptionConverter(platformVersionTransformer
                 .getIfAvailable(DefaultProjectRequestPlatformVersionTransformer::new));
         ProjectGenerationInvoker<ExtendProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
             applicationContext, converter);
-        return new ExtendProjectGenerationController(metadataProvider, projectGenerationInvoker);
+        return new ExtendProjectGenerationController(metadataProvider, projectGenerationInvoker, gitServiceFactoryDelegate);
     }
 
     @Bean
@@ -176,7 +178,7 @@ public class ExtendInitializrAutoConfiguration {
     @ConditionalOnProperty(prefix = "extend.initializr.oauthapps", name = "github.enabled", havingValue = "true")
     GitHubOAuthClient gitHubOAuthClient(ExtendInitializrProperties properties, WebClient.Builder builder) {
         OAuthApp oAuthApp = properties.getOAuthApps()
-                                       .get("github");
+                                      .get(GitServiceEnum.GITHUB.getName());
         return new GitHubOAuthClient(oAuthApp, builder);
     }
 

@@ -3,9 +3,9 @@ package com.azure.spring.initializr.extension.scm.push.github.restclient;
 import com.azure.spring.initializr.extension.scm.push.common.service.GitService;
 import com.azure.spring.initializr.extension.scm.push.common.service.GitServiceFactory;
 
-public class GithubServiceFactory implements GitServiceFactory {
+import static com.azure.spring.initializr.extension.scm.push.common.GitServiceEnum.GITHUB;
 
-    private static final String GITHUB = "github";
+public class GithubServiceFactory implements GitServiceFactory {
 
     private GitHubOAuthClient gitHubOAuthClient;
 
@@ -23,6 +23,6 @@ public class GithubServiceFactory implements GitServiceFactory {
 
     @Override
     public boolean support(String gitServiceType) {
-        return GITHUB.equals(gitServiceType);
+        return GITHUB.getName().equals(gitServiceType);
     }
 }

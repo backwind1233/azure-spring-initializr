@@ -2,12 +2,11 @@ package com.azure.spring.initializr.extension.scm.push.common.service;
 
 
 import com.azure.spring.initializr.extension.scm.push.common.exception.OAuthAppException;
-import com.azure.spring.initializr.extension.scm.push.common.model.Repository;
 import com.azure.spring.initializr.extension.scm.push.common.model.TokenResult;
 import com.azure.spring.initializr.extension.scm.push.common.model.User;
 import com.azure.spring.initializr.extension.scm.push.common.restclient.GitClient;
 import com.azure.spring.initializr.extension.scm.push.common.restclient.OAuthClient;
-import com.azure.spring.initializr.web.scm.push.PushToGitProjectRequest;
+import com.azure.spring.initializr.web.project.ExtendProjectRequest;
 import io.spring.initializr.web.project.ProjectGenerationResult;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
@@ -50,7 +49,7 @@ public class GitService {
         return code;
     }
 
-    public String pushToGitRepository(PushToGitProjectRequest request, ProjectGenerationResult result) {
+    public String pushToGitRepository(ExtendProjectRequest request, ProjectGenerationResult result) {
         checkParameters(request);
 
         if (request.getBaseDir() == null) {
@@ -58,26 +57,20 @@ public class GitService {
         }
 
         User user = getUser();
-        String username = user.getUsername();
-        String artifactId = request.getArtifactId();
-        boolean repositoryExists = repositoryExists(username, artifactId);
+        boolean repositoryExists = repositoryExists(user, request);
 
         if (repositoryExists) {
             throw new OAuthAppException("There is already a project named ' "
-                    + artifactId
+                    + request.getArtifactId()
                     + "' on your " + request.getGitServiceType()
                     + ", please retry with a different name (the artifact is the name)...");
         }
 
-        Repository repository = new Repository();
-        repository.setName(artifactId);
-        repository.setWorkSpace(username);
-        createRepository(repository);
+        String gitRepositoryUrl = createRepository(user, request);
 
-        String gitRepositoryUrl = "https://github.com/" + username + "/" + artifactId;
         File path = new File(result.getRootDirectory().toFile().getAbsolutePath()
                 + "/" + request.getBaseDir());
-        gitPush(username, path, gitRepositoryUrl);
+        gitPush(user.getUsername(), path, gitRepositoryUrl);
         return gitRepositoryUrl;
     }
 
@@ -87,7 +80,7 @@ public class GitService {
             authorized = true;
             if (StringUtils.isNotEmpty(tokenResult.getAccessToken())) {
                 accessToken = tokenResult.getAccessToken();
-            }else {
+            } else {
                 throw new OAuthAppException(tokenResult.getError());
             }
         }
@@ -98,17 +91,18 @@ public class GitService {
         return gitClient.getUser(accessToken);
     }
 
-    private String createRepository(Repository repository) {
-        return gitClient.createRepository(accessToken, repository);
+    private String createRepository(User user, ExtendProjectRequest request) {
+        return gitClient.createRepository(accessToken, user, request);
     }
 
-    private boolean repositoryExists(String username, String repoName) {
-        return gitClient.repositoryExists(accessToken, username, repoName);
+    private boolean repositoryExists(User user, ExtendProjectRequest request) {
+        return gitClient.repositoryExists(accessToken, user, request);
     }
 
     /**
+     *
      */
-    private void gitPush(String userName, File directory, String  gitRepoUrl) {
+    private void gitPush(String userName, File directory, String gitRepoUrl) {
         try {
             Assert.notNull(accessToken, "Invalid token.");
             Assert.notNull(userName, "Invalid userName name.");
@@ -156,7 +150,7 @@ public class GitService {
         pushCommand.call();
     }
 
-    private void checkParameters(PushToGitProjectRequest request) {
+    private void checkParameters(ExtendProjectRequest request) {
         Assert.notNull(request.getArtifactId(), "Invalid request param artifactId.");
         Assert.notNull(request.getCode(), "Invalid request param code.");
         Assert.notNull(request.getName(), "Invalid request param name.");
