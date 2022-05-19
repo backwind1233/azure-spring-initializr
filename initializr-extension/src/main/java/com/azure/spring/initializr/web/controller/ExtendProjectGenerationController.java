@@ -23,9 +23,9 @@ import java.util.Map;
 
 public class ExtendProjectGenerationController extends ProjectGenerationController<ExtendProjectRequest> {
 
-    private ProjectGenerationInvoker<ExtendProjectRequest> projectGenerationInvoker;
+    private final ProjectGenerationInvoker<ExtendProjectRequest> projectGenerationInvoker;
 
-    private GitServiceFactoryDelegate gitServiceFactoryDelegate;
+    private final GitServiceFactoryDelegate gitServiceFactoryDelegate;
 
     public ExtendProjectGenerationController(InitializrMetadataProvider metadataProvider,
                                              ProjectGenerationInvoker<ExtendProjectRequest> projectGenerationInvoker,
@@ -93,7 +93,8 @@ public class ExtendProjectGenerationController extends ProjectGenerationControll
     public String invalidProjectRequest(RuntimeException ex, HttpServletRequest httpServletRequest) {
         Map<String, String> map = new HashMap<>();
         Enumeration<String> parameterNames = httpServletRequest.getParameterNames();
-        for (String name : Collections.list(parameterNames)) {
+        while (parameterNames.hasMoreElements()) {
+            String name = parameterNames.nextElement();
             map.put(name, httpServletRequest.getParameter(name));
         }
         ObjectMapper mapper = new ObjectMapper();

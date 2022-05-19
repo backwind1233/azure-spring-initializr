@@ -20,9 +20,9 @@ import java.util.Map;
 public class GitHubClient implements GitClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubClient.class);
 
-    private final static String BASE_URI = "https://api.github.com";
-    private final static String CREATE_REPO_PATH = "/user/repos";
-    private final static String GET_USER = "/user";
+    private static final String BASE_URI = "https://api.github.com";
+    private static final String CREATE_REPO_PATH = "/user/repos";
+    private static final String GET_USER = "/user";
 
     private final WebClient.Builder builder;
 
