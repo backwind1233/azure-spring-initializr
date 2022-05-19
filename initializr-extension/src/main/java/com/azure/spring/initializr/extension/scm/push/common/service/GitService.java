@@ -95,8 +95,8 @@ public class GitService {
      */
     private void commitAndPush(String userName, File directory, String gitRepoUrl) {
         try {
-            Assert.notNull(accessToken, "Invalid token.");
-            Assert.notNull(userName, "Invalid userName name.");
+            Assert.notNull(accessToken, "Invalid accessToken.");
+            Assert.notNull(userName, "Invalid userName.");
 
             Git repo = gitCommit(userName, directory);
             gitPush(accessToken, userName, gitRepoUrl, repo);
