@@ -164,18 +164,18 @@ public class ExtendInitializrAutoConfiguration {
     }
 
     @Bean
-    GitServiceFactoryDelegate gitServiceFactoryDelegate(ObjectProvider<List<GitServiceFactory>> providerFactories) {
+    GitServiceFactoryDelegate gitServiceFactoryDelegate(ObjectProvider<GitServiceFactory> providerFactories) {
         return new GitServiceFactoryDelegate(providerFactories);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "extend.initializr.oauthapps", name = "github.enabled", havingValue = "true")
+    @ConditionalOnProperty(prefix = "extend.initializr.gitpush.oauthapps", name = "github.enabled", havingValue = "true")
     GitHubClient gitHubClient(WebClient.Builder builder) {
         return new GitHubClient(builder);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "extend.initializr.oauthapps", name = "github.enabled", havingValue = "true")
+    @ConditionalOnProperty(prefix = "extend.initializr.gitpush.oauthapps", name = "github.enabled", havingValue = "true")
     GitHubOAuthClient gitHubOAuthClient(ExtendInitializrProperties properties, WebClient.Builder builder) {
         OAuthApp oAuthApp = properties.getOAuthApps()
                                       .get(GitServiceEnum.GITHUB.getName());
@@ -183,9 +183,9 @@ public class ExtendInitializrAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "extend.initializr.oauthapps", name = "github.enabled", havingValue = "true")
-    GithubServiceFactory githubServiceFactory(GitHubOAuthClient gitHubOAuthClient, GitHubClient gitHubClient) {
-        return new GithubServiceFactory(gitHubOAuthClient, gitHubClient);
+    @ConditionalOnProperty(prefix = "extend.initializr.gitpush.oauthapps", name = "github.enabled", havingValue = "true")
+    GitServiceFactory githubServiceFactory(GitHubOAuthClient gitHubOAuthClient, GitHubClient gitHubClient, ExtendInitializrProperties properties) {
+        return new GithubServiceFactory(gitHubOAuthClient, gitHubClient, properties.getGitPush());
     }
 
     @Bean
