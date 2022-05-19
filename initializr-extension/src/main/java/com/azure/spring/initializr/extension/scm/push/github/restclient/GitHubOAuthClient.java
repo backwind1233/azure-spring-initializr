@@ -38,7 +38,7 @@ public class GitHubOAuthClient implements OAuthClient {
         Assert.notNull(oAuthApp.getClientSecret(), "Invalid clientSecret.");
         Assert.notNull(oAuthApp.getRedirectUri(), "Invalid redirectUri.");
         try {
-            Map<String, String> map = new HashMap();
+            Map<String, String> map = new HashMap<>();
             map.put("client_id", oAuthApp.getClientId());
             map.put("client_secret", oAuthApp.getClientSecret());
             map.put("redirect_uri", oAuthApp.getRedirectUri());

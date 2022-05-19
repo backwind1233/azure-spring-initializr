@@ -30,11 +30,6 @@ public class GitHubClient implements GitClient {
         this.builder = builder;
     }
 
-    /**
-     * Get current login user info.
-     * @param accessToken
-     * @return
-     */
     @Override
     public User getUser(String accessToken) {
         Assert.notNull(accessToken, "Invalid accessToken.");
@@ -63,7 +58,7 @@ public class GitHubClient implements GitClient {
         Assert.notNull(user, "Invalid user.");
 
         try {
-            Map<String, String> map = new HashMap();
+            Map<String, String> map = new HashMap<>();
             map.put("name", request.getArtifactId());
 
             CreatedRepository createdRepository = builder.baseUrl(BASE_URI)
@@ -98,10 +93,7 @@ public class GitHubClient implements GitClient {
                     .exchange()
                     .block()
                     .statusCode();
-            if ("OK".equals(httpStatus.getReasonPhrase())) {
-                return true;
-            }
-            return false;
+            return "OK".equals(httpStatus.getReasonPhrase());
         } catch (RuntimeException ex) {
             LOGGER.error("An error occurred while checking repository status.", ex);
             throw new OAuthAppException("An error occurred while checking repository status.");

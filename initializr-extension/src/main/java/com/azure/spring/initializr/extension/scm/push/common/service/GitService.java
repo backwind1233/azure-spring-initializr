@@ -60,7 +60,7 @@ public class GitService {
         return gitRepositoryUrl;
     }
 
-    private String getAccessToken() {
+    private void getAccessToken() {
         if (!authorized) {
             TokenResult tokenResult = oAuthClient.getAccessToken(code);
             authorized = true;
@@ -70,7 +70,6 @@ public class GitService {
                 throw new OAuthAppException(tokenResult.getError());
             }
         }
-        return accessToken;
     }
 
     private User getUser() {
@@ -106,8 +105,8 @@ public class GitService {
             LOGGER.error("An error occurred while pushing to the git repo.", gitAPIException);
             throw new OAuthAppException("An error occurred while pushing to the git repo.");
         } catch (URISyntaxException uriSyntaxException) {
-            LOGGER.error("An error occurred while setting gituri of the git repo.", uriSyntaxException);
-            throw new OAuthAppException("An error occurred while setting gituri of the git repo.");
+            LOGGER.error("An error occurred while setting gitRepoUrl of the git repo.", uriSyntaxException);
+            throw new OAuthAppException("An error occurred while setting gitRepoUrl of the git repo.");
         }
     }
 

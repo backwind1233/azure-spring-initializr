@@ -21,7 +21,7 @@ import io.spring.initializr.generator.spring.scm.git.GitIgnore;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 
 /**
- * A {@link GitIgnoreCustomizer} that removes {@code HELP.md} in the ignore list when
+ * A {@link GitIgnoreCustomizer} that removes {@code HELP.md} in the ignored list when
  * put the generated project to git repository.
  *
  */

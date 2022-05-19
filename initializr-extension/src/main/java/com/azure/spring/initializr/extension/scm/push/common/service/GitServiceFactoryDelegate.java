@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class GitServiceFactoryDelegate {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitServiceFactoryDelegate.class);
 
-    private List<GitServiceFactory> gitServiceFactories;
+    private final List<GitServiceFactory> gitServiceFactories;
 
     public GitServiceFactoryDelegate(ObjectProvider<GitServiceFactory> gitServiceFactories) {
         this.gitServiceFactories = gitServiceFactories.orderedStream().collect(Collectors.toList());
@@ -32,7 +32,4 @@ public class GitServiceFactoryDelegate {
         throw new OAuthAppException("An error occurred while getting git service.");
     }
 
-    public void setGitServiceFactories(List<GitServiceFactory> gitServiceFactories) {
-        this.gitServiceFactories = gitServiceFactories;
-    }
 }
